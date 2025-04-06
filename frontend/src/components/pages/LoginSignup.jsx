@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import userService from "../../service/userService";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contextData/AuthContextData";
 
 const LoginSignup = () => {
     const [activeTab, setActiveTab] = useState("login");
@@ -15,6 +17,9 @@ const LoginSignup = () => {
         email: "",
         password: ""
     });
+    const { user, loading } = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     // Variants for one-by-one effect
     const containerVariants = {
@@ -60,7 +65,8 @@ const LoginSignup = () => {
         try{
             const res = await userService.signUp(signUpUser);
             console.log("This is signup res in frontend:- ", res);
-            return toast.success("Signup Successfull");
+            toast.success("Signup Successfull");
+            navigate('/home');
         }
         catch(error){
             if(error.status === 401){
@@ -89,13 +95,16 @@ const LoginSignup = () => {
         try{
             const res = await userService.logIn(loginUser);
             console.log("This is login res in frontend:- ", res);
-            return toast.success("Login Successfull");
+            toast.success("Login Successfull");
+            navigate('/home');
         }
         catch(error){
-            console.error("Failed to login user ", error);
-            return toast.error("Failed to login User");
+            console.error("Failed to login user ", error?.response?.data?.msg);
+            return toast.error("Invalid email or password");
         }
     }
+
+    if (loading) return <p>Loading...</p>;
 
     return (
         <div className="flex flex-col md:flex-row h-screen bg-[#1E3A8A]">

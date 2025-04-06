@@ -13,7 +13,7 @@ const Header = () => {
         {/* Center - Navigation Links */}
         <div className="space-x-10">
           <NavLink 
-            to="/" 
+            to="/home" 
             className={({ isActive }) => 
               `text-white hover:text-yellow-500 font-bold ${isActive ? 'text-yellow-500 font-bold' : ''}`
             }

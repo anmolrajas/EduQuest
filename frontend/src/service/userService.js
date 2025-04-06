@@ -1,10 +1,16 @@
 import axios from 'axios';
-import BackendServer from '../config/config'
+import BackendServer from '../config/config';
+
+// Create an Axios instance with default settings
+const API = axios.create({
+  baseURL: `${BackendServer}/api/users`,
+  withCredentials: true, // Ensures cookies are sent & received
+});
 
 const signUp = async (userData) => {
   try {
     console.log("In service:- ", userData);
-    const response = await axios.post(`${BackendServer}/api/users/signup`, userData);
+    const response = await API.post('/signup', userData);
     console.log("Response in service file:- ", response);
     return response.data;
   } catch (error) {
@@ -16,7 +22,7 @@ const signUp = async (userData) => {
 const logIn = async (userData) => {
   try {
     console.log("In service:- ", userData);
-    const response = await axios.post(`${BackendServer}/api/users/login`, userData);
+    const response = await API.post('/login', userData);
     console.log("Response in service file:- ", response);
     return response.data;
   } catch (error) {

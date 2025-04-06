@@ -1,5 +1,5 @@
 import React from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Home from './components/pages/Home'
 import MyBlogs from './components/pages/MyBlogs'
 import Activity from './components/pages/Activity'
@@ -7,44 +7,54 @@ import Layout from './components/layout/Layout'
 import ErrorPage from './components/pages/ErrorPage'
 import Create from './components/pages/Create'
 import LoginSignup from './components/pages/LoginSignup'
+import AuthProvider from "./contextData/AuthContextData";
+import ProtectedRoutes from './routes/ProtectedRoutes';
 
-const App = () => {
-
-  const router = createBrowserRouter(
-    [
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <ProtectedRoutes />, // Check for auth
+    children: [
       {
         path: '/',
         element: <Layout />,
         errorElement: <ErrorPage />,
         children: [
           {
-            path: '/',
-            element: <Home />,
             index: true,
+            element: <Navigate to="/home" replace />
           },
           {
-            path: '/create',
+            path: 'home',
+            element: <Home />
+          },
+          {
+            path: 'create',
             element: <Create />
           },
           {
-            path: '/myblogs',
+            path: 'myblogs',
             element: <MyBlogs />
           },
           {
-            path: '/activity',
+            path: 'activity',
             element: <Activity />
           }
         ]
-      },
-      {
-        path: '/login',
-        element: <LoginSignup />
       }
     ]
-  )
+  },
+  {
+    path: '/login',
+    element: <LoginSignup />
+  }
+])
 
+const App = () => {
   return (
-    <RouterProvider router={router}></RouterProvider>
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   )
 }
 

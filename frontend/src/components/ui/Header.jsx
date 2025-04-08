@@ -1,62 +1,36 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 
-const Header = () => {
+const Header = ({ onMenuClick }) => {
   return (
-    <nav className="bg-black shadow-md">
-      <div className='max-w-7xl mx-auto p-4 flex justify-between items-center'>
-        {/* Left - App Name */}
-        <div className="text-2xl font-bold text-yellow-500">
-          <NavLink to="/home">Bloggy</NavLink>
-        </div>
+    <AppBar position="fixed" sx={{ zIndex: 1201, backgroundColor: '#1f2937' }}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={onMenuClick}
+          sx={{ mr: 2, display: { md: 'none' } }}
+        >
+          <MenuIcon />
+        </IconButton>
 
-        {/* Center - Navigation Links */}
-        <div className="space-x-10">
-          <NavLink 
-            to="/home" 
-            className={({ isActive }) => 
-              `text-white hover:text-yellow-500 font-bold ${isActive ? 'text-yellow-500 font-bold' : ''}`
-            }
-          >
-            Home
-          </NavLink>
-          <NavLink 
-            to="/create" 
-            className={({ isActive }) => 
-              `text-white hover:text-yellow-500 font-bold ${isActive ? 'text-yellow-500 font-bold' : ''}`
-            }
-          >
-            Create
-          </NavLink>
-          <NavLink 
-            to="/myblogs" 
-            className={({ isActive }) => 
-              `text-white hover:text-yellow-500 font-bold ${isActive ? 'text-yellow-500 font-bold' : ''}`
-            }
-          >
-            My Blogs
-          </NavLink>
-          <NavLink 
-            to="/activity" 
-            className={({ isActive }) => 
-              `text-white hover:text-yellow-500 font-bold ${isActive ? 'text-yellow-500 font-bold' : ''}`
-            }
-          >
-            Activity
-          </NavLink>
-        </div>
-
-        {/* Right - User Profile */}
-        <div className="flex items-center space-x-3">
-          <img
-            src="https://cdn.pixabay.com/photo/2015/03/04/22/35/avatar-659652_640.png"
-            alt="User Profile"
-            className="w-10 h-10 rounded-full border"
-          />
-          <span className="text-white font-medium">John Doe</span>
-        </div>
-      </div>
-    </nav>
+        <Typography
+          variant="h5"
+          noWrap
+          component="div"
+          sx={{
+            color: '#facc15',
+            fontWeight: 800,
+            letterSpacing: 1,
+            cursor: 'pointer',
+          }}
+        >
+          EduTech
+        </Typography>
+      </Toolbar>
+    </AppBar>
   );
 };
 

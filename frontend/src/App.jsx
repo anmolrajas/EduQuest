@@ -1,24 +1,26 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import Home from './components/pages/Home'
-import MyBlogs from './components/pages/MyBlogs'
-import Activity from './components/pages/Activity'
-import Layout from './components/layout/Layout'
 import ErrorPage from './components/pages/ErrorPage'
-import Create from './components/pages/Create'
 import LoginSignup from './components/pages/LoginSignup'
 import AuthProvider from "./contextData/AuthContextData";
 import ProtectedRoutes from './routes/ProtectedRoutes';
+import Content from './components/pages/admin/content/content'
+import Layout from './components/layout/Layout'
+import Subject from './components/pages/admin/content/Subject'
+import Topic from './components/pages/admin/content/Topic'
+import Question from './components/pages/admin/content/Question'
+import Quiz from './components/pages/admin/content/Quiz'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <ProtectedRoutes />, // Check for auth
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
         element: <Layout />,
-        errorElement: <ErrorPage />,
         children: [
           {
             index: true,
@@ -29,16 +31,24 @@ const router = createBrowserRouter([
             element: <Home />
           },
           {
-            path: 'create',
-            element: <Create />
+            path: '/admin/content',
+            element: <Content />
           },
           {
-            path: 'myblogs',
-            element: <MyBlogs />
+            path: '/admin/content/subjects',
+            element: <Subject />
           },
           {
-            path: 'activity',
-            element: <Activity />
+            path: '/admin/content/topics',
+            element: <Topic />
+          },
+          {
+            path: '/admin/content/questions',
+            element: <Question />
+          },
+          {
+            path: '/admin/content/quizzes',
+            element: <Quiz />
           }
         ]
       }

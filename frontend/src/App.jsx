@@ -11,6 +11,8 @@ import Subject from './components/pages/admin/content/Subject'
 import Topic from './components/pages/admin/content/Topic'
 import Question from './components/pages/admin/content/Question'
 import Quiz from './components/pages/admin/content/Quiz'
+import CreateSubject from './components/pages/admin/content/CreateSubject'
+import EditSubject from './components/pages/admin/content/editSubject'
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
           {
             path: '/admin/content/subjects',
             element: <Subject />
+          },
+          {
+            path: '/admin/content/subjects/create',
+            element: <CreateSubject />
+          },
+          {
+            path: '/admin/content/subjects/edit',
+            element: <EditSubject />
           },
           {
             path: '/admin/content/topics',

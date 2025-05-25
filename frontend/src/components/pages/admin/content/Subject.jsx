@@ -101,52 +101,62 @@ const Subject = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {subjects.map((subject, index) => (
-                            <tr key={subject.id} className="border-b hover:bg-gray-50">
-                                <td className="py-3 px-4 text-center">{index + 1}</td>
-                                <td className="py-3 px-4 text-center">{subject.name}</td>
-                                <td className="py-3 px-4 text-center">{subject.slug}</td>
-                                <td className="py-3 px-4 text-center">{subject.desc}</td>
-                                <td className="py-3 px-4 text-center">{subject.topics_count}</td>
-                                <td className="py-3 px-4 text-center">
-                                    {new Date(subject.createdAt).toLocaleString('en-GB', {
-                                        day: '2-digit',
-                                        month: '2-digit',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        hour12: true
-                                    })}
-                                </td>
-                                <td className="py-3 px-4 text-center">
-                                    <IconButton
-                                        color="primary"
-                                        onClick={() => handleEdit(subject._id)}
-                                        aria-label="edit"
-                                    >
-                                        <EditIcon />
-                                    </IconButton>
+                        {
+                            subjects.length === 0 ? (
+                                <tr>
+                                    <td colSpan={6} className="py-6 text-2xl text-center text-gray-500">
+                                        No Subjects available
+                                    </td>
+                                </tr>
+                            ) : (
+                                subjects.map((subject, index) => (
+                                    <tr key={subject.id} className="border-b hover:bg-gray-50">
+                                        <td className="py-3 px-4 text-center">{index + 1}</td>
+                                        <td className="py-3 px-4 text-center">{subject.name}</td>
+                                        <td className="py-3 px-4 text-center">{subject.slug}</td>
+                                        <td className="py-3 px-4 text-center">{subject.desc}</td>
+                                        <td className="py-3 px-4 text-center">{subject.topics_count}</td>
+                                        <td className="py-3 px-4 text-center">
+                                            {new Date(subject.createdAt).toLocaleString('en-GB', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true
+                                            })}
+                                        </td>
+                                        <td className="py-3 px-4 text-center">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={() => handleEdit(subject._id)}
+                                                aria-label="edit"
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
 
-                                    {!subject.status ? (
-                                        <IconButton
-                                            color="success"
-                                            onClick={() => handleActionClick(subject._id, 'restore')}
-                                            aria-label="restore"
-                                        >
-                                            <Restore />
-                                        </IconButton>
-                                    ) : (
-                                        <IconButton
-                                            color="error"
-                                            onClick={() => handleActionClick(subject._id, 'delete')}
-                                            aria-label="delete"
-                                        >
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    )}
-                                </td>
-                            </tr>
-                        ))}
+                                            {!subject.status ? (
+                                                <IconButton
+                                                    color="success"
+                                                    onClick={() => handleActionClick(subject._id, 'restore')}
+                                                    aria-label="restore"
+                                                >
+                                                    <Restore />
+                                                </IconButton>
+                                            ) : (
+                                                <IconButton
+                                                    color="error"
+                                                    onClick={() => handleActionClick(subject._id, 'delete')}
+                                                    aria-label="delete"
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            )
+                        }
                     </tbody>
                 </table>
             </div>

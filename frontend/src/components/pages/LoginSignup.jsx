@@ -1,149 +1,208 @@
-import React, { useState } from 'react';
-import {
-  TextField,
-  Button,
-  MenuItem,
-  Typography,
-  Box,
-  Paper,
-  Grid,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useContext, useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import userService from "../../service/userService";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contextData/AuthContextData";
 
-const templateOptions = [
-  { label: 'Abstract Blue', value: 'template-blue.jpg' },
-  { label: 'Geometric Purple', value: 'template-purple.jpg' },
-  { label: 'Chalkboard', value: 'template-chalk.jpg' },
-  { label: 'Modern Grid', value: 'template-grid.jpg' },
-];
+const LoginSignup = () => {
+    const [activeTab, setActiveTab] = useState("login");
+    const [signUpUser, setSignUpUser] = useState({
+        name: "",
+        password: "",
+        email: "",
+        profilePicture: ""
+    });
+    const [loginUser, setLoginUser] = useState({
+        email: "",
+        password: ""
+    });
+    const { user, setUser, loading } = useContext(AuthContext);
 
-const CreateSubject = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    template: '',
-  });
+    const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-
-  const generateSlug = (name) =>
-    name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = () => {
-    const { name, description, template } = formData;
-    const newErrors = {};
-
-    if (!name.trim()) newErrors.name = 'Subject name is required';
-    if (!description.trim()) newErrors.description = 'Description is required';
-    if (!template) newErrors.template = 'Please select a template';
-
-    if (Object.keys(newErrors).length) {
-      setErrors(newErrors);
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
-    const payload = {
-      ...formData,
-      subjectId: generateSlug(name),
-      topicCount: 0,
+    // Variants for one-by-one effect
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.8 // Each child appears one by one every 0.5s
+            }
+        }
     };
 
-    console.log('Submitting:', payload);
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0, transition: { duration: 1.0 } }
+    };
 
-    toast.success('Subject created successfully!');
-    navigate('/subject');
-  };
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-  return (
-    <Box sx={{ p: 4 }}>
-      <Paper elevation={3} sx={{ p: 4, maxWidth: 700, mx: 'auto' }}>
-        <Typography variant="h5" fontWeight="bold" gutterBottom>
-          Add New Subject
-        </Typography>
+    const handleSignUpChange = (e) => {
+        setSignUpUser({ ...signUpUser, [e.target.name]: e.target.value });
+    };
 
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Subject Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              error={!!errors.name}
-              helperText={errors.name}
-            />
-          </Grid>
+    const handleLoginChange = (e) => {
+        setLoginUser({ ...loginUser, [e.target.name]: e.target.value });
+    };
 
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              error={!!errors.description}
-              helperText={errors.description}
-            />
-          </Grid>
+    const handleSignUpSubmit = async(e) => {
+        e.preventDefault();
 
-          <Grid item xs={12}>
-            <TextField
-              select
-              fullWidth
-              label="Select Template"
-              name="template"
-              value={formData.template}
-              onChange={handleChange}
-              error={!!errors.template}
-              helperText={errors.template}
+        console.log("This is signup form data:- ", signUpUser);
+
+        if(!signUpUser.email)   return toast.info("Please enter your email");
+
+        if(!signUpUser.password)    return toast.info("Please enter your password");
+
+        if(!signUpUser.name)   return toast.info("Please enter your name"); 
+
+        if (!emailRegex.test(signUpUser.email)) {
+            return toast.error("Please enter a valid email address");
+        }
+
+        try{
+            const res = await userService.signUp(signUpUser);
+            console.log("This is signup res in frontend:- ", res);
+            toast.success("Signup Successfull");
+            navigate('/home');
+        }
+        catch(error){
+            if(error.status === 401){
+                console.error("User already exists", error);
+                return toast.error("User already exisits");
+            }
+            console.error("Failed to signup user ", error);
+            return toast.error("Failed to SignUp user");
+        }
+
+    }
+
+    const handleLoginSubmit = async(e) => {
+        e.preventDefault();
+
+        console.log("This is login form data:- ", loginUser);
+
+        if(!loginUser.email)   return toast.info("Please enter your email");
+
+        if(!loginUser.password)    return toast.info("Please enter your password");
+
+        if (!emailRegex.test(loginUser.email)) {
+            return toast.error("Please enter a valid email address");
+        }
+
+        try{
+            const res = await userService.logIn(loginUser);
+            console.log("This is login res in frontend:- ", res);
+            setUser(res.user);
+            toast.success("Login Successfull");
+            navigate('/home');
+        }
+        catch(error){
+            console.error("Failed to login user ", error?.response?.data?.msg);
+            return toast.error("Invalid email or password");
+        }
+    }
+
+    if (loading) return <p>Loading...</p>;
+
+    return (
+        <div className="flex flex-col md:flex-row h-screen bg-[#1E3A8A]">
+            {/* Left Section: Login/Signup */}
+            <motion.div 
+                initial={{ opacity: 0, x: -50 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ duration: 1.5 }}
+                className="w-full md:w-1/2 flex flex-col justify-center items-center bg-[#22D3EE] p-6"
             >
-              {templateOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
+                <div className="w-full max-w-md p-8 bg-[#1E3A8A] text-white rounded-lg shadow-lg">
+                    <motion.div 
+                        initial={{ opacity: 0, y: -10 }} 
+                        animate={{ opacity: 1, y: 0 }} 
+                        transition={{ duration: 0.8 }}
+                        className="flex mb-6"
+                    >
+                        <button
+                            className={`w-1/2 py-3 text-xl font-bold ${
+                                activeTab === "login" ? "border-b-2 border-[#F59E0B]" : "text-gray-400"
+                            }`}
+                            onClick={() => setActiveTab("login")}
+                        >
+                            Login
+                        </button>
+                        <button
+                            className={`w-1/2 py-3 text-xl font-bold ${
+                                activeTab === "signup" ? "border-b-2 border-[#F59E0B]" : "text-gray-400"
+                            }`}
+                            onClick={() => setActiveTab("signup")}
+                        >
+                            Signup
+                        </button>
+                    </motion.div>
 
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={() => navigate(-1)}
-              startIcon={<ArrowBackIos />}
+                    {activeTab === "login" ? (
+                        <form onSubmit={handleLoginSubmit}>
+                            <input type="text" placeholder="📧 Email" name="email" className="w-full p-3 border rounded mb-3 bg-[#334155] text-white" value={loginUser.email} onChange={handleLoginChange} />
+                            <input type="password" placeholder="🔒 Password" name="password" className="w-full p-3 border rounded mb-3 bg-[#334155] text-white" value={loginUser.password} onChange={handleLoginChange} />
+                            <motion.button 
+                                whileHover={{ scale: 1.05 }} 
+                                whileTap={{ scale: 0.95 }} 
+                                type="submit" 
+                                className="w-full bg-[#F59E0B] text-black py-3 rounded font-bold"
+                            >
+                                Login
+                            </motion.button>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleSignUpSubmit}>
+                            <input type="text" placeholder="📝 Name" name="name" className="w-full p-3 border rounded mb-3 bg-[#334155] text-white" value={signUpUser.name} onChange={handleSignUpChange}  />
+                            <input type="text" placeholder="📧 Email" name="email" className="w-full p-3 border rounded mb-3 bg-[#334155] text-white" value={signUpUser.email} onChange={handleSignUpChange} />
+                            <input type="password" placeholder="🔒 Password" name="password" className="w-full p-3 border rounded mb-3 bg-[#334155] text-white" value={signUpUser.password} onChange={handleSignUpChange} />
+                            <motion.button 
+                                whileHover={{ scale: 1.05 }} 
+                                whileTap={{ scale: 0.95 }} 
+                                type="submit" 
+                                className="w-full bg-[#F59E0B] text-black py-3 rounded font-bold"
+                            >
+                                Signup
+                            </motion.button>
+                        </form>
+                    )}
+                </div>
+            </motion.div>
+
+            {/* Right Section: Learning Platform Info with One-by-One Effect */}
+            <motion.div 
+                initial="hidden"
+                animate="show"
+                variants={containerVariants}
+                className="w-full md:w-1/2 flex flex-col justify-center items-center bg-[#1E3A8A] text-white p-10 text-center"
             >
-              Back
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Create
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Box>
-  );
+                <motion.h1
+                    variants={itemVariants}
+                    className="text-4xl md:text-5xl font-bold mb-6 text-[#F59E0B]"
+                >
+                    🚀 Welcome to EduQuest!
+                </motion.h1>
+                <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
+                    📚 <strong>Learn Smart:</strong> Access high-quality courses & assessments.
+                </motion.p>
+                <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
+                    🎯 <strong>Test Your Knowledge:</strong> Take interactive quizzes & track your progress.
+                </motion.p>
+                <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
+                    📊 <strong>AI Analytics:</strong> Get insights into your strengths & improvement areas.
+                </motion.p>
+                <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
+                    🏆 <strong>Earn Certifications:</strong> Boost your career with skill-based achievements.
+                </motion.p>
+                <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
+                    🔥 <strong>Join Now!</strong> Start your journey today & level up your skills!
+                </motion.p>
+            </motion.div>
+        </div>
+    );
 };
 
-export default CreateSubject;
+export default LoginSignup;

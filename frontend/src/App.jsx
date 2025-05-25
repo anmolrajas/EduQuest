@@ -13,6 +13,10 @@ import Question from './components/pages/admin/content/Question'
 import Quiz from './components/pages/admin/content/Quiz'
 import CreateSubject from './components/pages/admin/content/CreateSubject'
 import EditSubject from './components/pages/admin/content/editSubject'
+import CreateTopic from './components/pages/admin/content/createTopic'
+import EditTopic from './components/pages/admin/content/EditTopic'
+import CreateQuestion from './components/pages/admin/content/CreateQuestion'
+import EditQuestion from './components/pages/admin/content/EditQuestion'
 
 const router = createBrowserRouter([
   {
@@ -29,7 +33,7 @@ const router = createBrowserRouter([
             element: <Navigate to="/home" replace />
           },
           {
-            path: 'home',
+            path: '/home',
             element: <Home />
           },
           {
@@ -53,8 +57,24 @@ const router = createBrowserRouter([
             element: <Topic />
           },
           {
+            path: '/admin/content/topics/create',
+            element: <CreateTopic />
+          },
+          {
+            path: '/admin/content/topics/edit',
+            element: <EditTopic />
+          },
+          {
             path: '/admin/content/questions',
             element: <Question />
+          },
+          {
+            path: '/admin/content/questions/create',
+            element: <CreateQuestion />
+          },
+          {
+            path: '/admin/content/questions/edit',
+            element: <EditQuestion />
           },
           {
             path: '/admin/content/quizzes',

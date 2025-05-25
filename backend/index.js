@@ -6,6 +6,8 @@ const connectMongoDB = require('./connection')
 const userRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
 const subjectRoutes = require('./routes/subjectRoutes')
+const topicRoutes = require('./routes/topicRoutes')
+const questionRoutes = require('./routes/questionRoutes')
 const app = express();
 const PORT = 8000;
 
@@ -27,6 +29,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/subjects', subjectRoutes);
+app.use('/api/topics', topicRoutes);
+app.use('/api/questions', questionRoutes);
 
 app.get('/', (req, res) => {
     return res.end('Hello from server');

@@ -49,7 +49,14 @@ const userLogin = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000 // Expires in 7 days
     });
     
-    return res.status(200).json({ msg: "User Logged in Successfully" })
+    return res.status(200).json({
+        msg: "User Logged in Successfully", user: {
+            _id: result.user._id,
+            name: result.user.name,
+            email: result.user.email,
+            role: result.user.role
+        }
+    })
 }
 
 module.exports = {

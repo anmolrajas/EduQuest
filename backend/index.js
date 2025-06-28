@@ -10,8 +10,9 @@ const topicRoutes = require('./routes/topicRoutes')
 const questionRoutes = require('./routes/questionRoutes')
 const app = express();
 const PORT = 8000;
+require('dotenv').config();
 
-connectMongoDB("mongodb://127.0.0.1:27017/majorProjectDB").then(() => {
+connectMongoDB(process.env.MONGODB_URI).then(() => {
     console.log("MongoDB Connected Successfully");
 }).catch((err) => {
     console.log("MogoDB Connection Error:- ", err);

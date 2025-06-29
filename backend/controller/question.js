@@ -52,45 +52,45 @@ const createQuestion = async (req, res) => {
 
 // List questions with filters and pagination
 const listQuestions = async (req, res) => {
-    try {
-        const {
-            difficulty,
-            subjectId,
-            topicId,
-            search,
-            page = 1,
-            limit = 10
-        } = req.query;
+  try {
+    const {
+      difficulty,
+      subjectId,
+      topicId,
+      search,
+      page = 1,
+      limit = 10,
+    } = req.query;
 
-        const filter = {};
+    const filter = {};
 
-        if (difficulty) filter.difficulty = difficulty;
-        if (subjectId) filter.subjectId = subjectId;
-        if (topicId) filter.topicId = topicId;
-        if (search) filter.question = { $regex: search, $options: 'i' };
+    if (difficulty) filter.difficulty = difficulty;
+    if (subjectId) filter.subjectId = subjectId;
+    if (topicId) filter.topicId = topicId;
+    if (search) filter.question = { $regex: search, $options: 'i' };
 
-        const questions = await Question.find(filter)
-            .populate('subjectId', 'name')
-            .populate('topicId', 'name')
-            .sort({ createdAt: -1 })
-            .skip((page - 1) * limit)
-            .limit(parseInt(limit));
+    const questions = await Question.find(filter)
+      .populate('subjectId', 'name')
+      .populate('topicId', 'name')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
 
-        const total = await Question.countDocuments(filter);
+    const total = await Question.countDocuments(filter);
 
-        res.status(200).json({
-            success: true,
-            data: questions,
-            meta: {
-                total,
-                page: Number(page),
-                pages: Math.ceil(total / limit)
-            }
-        });
-    } catch (err) {
-        console.error("Error listing questions:", err);
-        res.status(500).json({ success: false, msg: "Failed to fetch questions." });
-    }
+    res.status(200).json({
+      success: true,
+      data: questions,
+      meta: {
+        total,
+        page: Number(page),
+        pages: Math.ceil(total / limit),
+      },
+    });
+  } catch (err) {
+    console.error("Error listing questions:", err);
+    res.status(500).json({ success: false, msg: "Failed to fetch questions." });
+  }
 };
 
 // Get single question detail

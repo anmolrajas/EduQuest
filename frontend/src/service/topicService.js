@@ -7,9 +7,9 @@ const API = axios.create({
     withCredentials: true, // Ensures cookies are sent & received
 });
 
-const listTopics = async () => {
+const listTopics = async (subjectId='') => {
     try {
-        const response = await API.get('/list');
+        const response = await API.get(`/list?subjectId=${subjectId}`);
         return response.data;
     } catch (error) {
         console.error('Error fetching topics list:', error.response?.data || error.message);
@@ -83,11 +83,24 @@ const restoreTopic = async (topicId) => {
     }
 };
 
+const getTopicNames = async (subjectId = '') => {
+    try {
+        const query = subjectId ? `?subjectId=${subjectId}` : '';
+        const response = await API.get(`/get-topic-names${query}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching topic names:', error?.response?.data || error.message);
+        throw error?.response?.data;
+    }
+};
+
+
 export default {
     listTopics,
     createTopic,
     getTopicDetails,
     editTopic,
     deleteTopic,
-    restoreTopic
+    restoreTopic,
+    getTopicNames
 };

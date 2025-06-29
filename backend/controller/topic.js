@@ -49,15 +49,22 @@ const createTopic = async (req, res) => {
 
 // List all topics
 const listTopics = async (req, res) => {
-    try {
-        const topics = await Topic.find().sort({ createdAt: -1 }).populate('subjectId', 'name');
+  try {
+    const { subjectId } = req.query;
 
-        res.status(200).json({ success: true, data: topics });
-    } catch (error) {
-        console.error("Error fetching topics:", error);
-        res.status(500).json({ success: false, msg: "Failed to fetch topics." });
-    }
+    const query = subjectId ? { subjectId } : {};
+
+    const topics = await Topic.find(query)
+      .sort({ createdAt: -1 })
+      .populate('subjectId', 'name'); // optional: include only subject name
+
+    res.status(200).json({ success: true, data: topics });
+  } catch (error) {
+    console.error("Error fetching topics:", error);
+    res.status(500).json({ success: false, msg: "Failed to fetch topics." });
+  }
 };
+
 
 // Get details of a single topic
 const topicDetails = async (req, res) => {
@@ -170,11 +177,27 @@ const restoreTopic = async (req, res) => {
     }
 };
 
+const getTopicNames = async (req, res) => {
+    try {
+        const { subjectId } = req.query;
+
+        const filter = subjectId ? { subjectId } : {};
+
+        const topics = await Topic.find(filter, { _id: 1, name: 1 }).sort({ name: 1 });
+
+        res.status(200).json({ success: true, data: topics });
+    } catch (error) {
+        console.error("Error fetching topic names:", error);
+        res.status(500).json({ success: false, msg: "Failed to fetch topic names." });
+    }
+};
+
 module.exports = {
     createTopic,
     listTopics,
     topicDetails,
     editTopic,
     deleteTopic,
-    restoreTopic
+    restoreTopic,
+    getTopicNames
 };

@@ -83,11 +83,23 @@ const restoreSubject = async(subjectId) => {
     }
 };
 
+const getSubjectNames = async () => {
+    try {
+        const response = await API.get('/get-subject-names');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching subject names:', error?.response?.data || error.message);
+        throw error?.response?.data;
+    }
+};
+
+
 export default {
     listSubjects,
     createSubject,
     getSubjectDetails,
     editSubject,
     deleteSubject,
-    restoreSubject
+    restoreSubject,
+    getSubjectNames
 };

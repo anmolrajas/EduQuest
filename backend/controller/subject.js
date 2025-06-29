@@ -162,11 +162,24 @@ const restoreSubject = async (req, res) => {
     }
 };
 
+
+const getSubjectNames = async (req, res) => {
+    try {
+        const subjects = await Subject.find({}, { name: 1 }).sort({ name: 1 }); // Only _id and name
+        res.status(200).json({ success: true, data: subjects });
+    } catch (error) {
+        console.error("Error fetching subject names:", error);
+        res.status(500).json({ success: false, msg: "Failed to fetch subject names." });
+    }
+};
+
+
 module.exports = {
     createSubject,
     listSubjects,
     subjectDetails,
     editSubject,
     deleteSubject,
-    restoreSubject
+    restoreSubject,
+    getSubjectNames
 }

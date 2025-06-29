@@ -17,6 +17,7 @@ import CreateTopic from './components/pages/admin/content/createTopic'
 import EditTopic from './components/pages/admin/content/EditTopic'
 import CreateQuestion from './components/pages/admin/content/CreateQuestion'
 import EditQuestion from './components/pages/admin/content/EditQuestion'
+import Practice from './components/practice-components/Practice'
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,18 @@ const router = createBrowserRouter([
           {
             path: '/home',
             element: <Home />
+          },
+          {
+            path:"/learn/practice",
+            element:<Practice /> 
+          },
+          {
+            path:"/learn/practice/subject/:subjectId",
+            element:<Practice /> 
+          },
+          {
+            path:"/learn/practice/:subjectId/:topicId",
+            element:<Practice /> 
           },
           {
             path: '/admin/content',

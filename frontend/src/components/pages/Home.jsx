@@ -3,11 +3,22 @@ import UserProfileCard from "../home-components/UserProfileCard"
 import PerformanceCard from "../home-components/PerformanceCard";
 import ActivityOverviewCard from "../home-components/ActivityOverviewCard";
 import QuoteCard from "../home-components/QuoteCard";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contextData/AuthContextData";
+import userService from "../../service/userService";
 
 const Home = () => {
   const { user } = useContext(AuthContext);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  useEffect(() => {
+    if (user?._id) {
+      userService.getDashboardStats(user._id).then((res) => {
+        if (res?.success) setDashboardData(res.data);
+      });
+    }
+  }, [user]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -29,7 +40,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-1"
           >
-            <UserProfileCard user={user} />
+            <UserProfileCard user={user} dashboardData={dashboardData} />
           </motion.div>
 
           <motion.div
@@ -38,7 +49,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="lg:col-span-2"
           >
-            <ActivityOverviewCard />
+            <ActivityOverviewCard dashboardData={dashboardData} />
           </motion.div>
 
           {/* Second Row - Full Width */}
@@ -48,7 +59,7 @@ const Home = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="lg:col-span-3"
           >
-            <PerformanceCard />
+            <PerformanceCard dashboardData={dashboardData} />
           </motion.div>
         </div>
       </div>

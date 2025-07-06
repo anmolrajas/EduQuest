@@ -2,13 +2,17 @@ import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { Quiz, Assignment, CheckCircle } from "@mui/icons-material";
 
-const data = [
-  { name: 'Questions Solved', value: 680, color: '#8b5cf6' },
-  { name: 'Tests Taken', value: 245, color: '#ec4899' },
-  { name: 'Assignments', value: 89, color: '#06b6d4' },
-];
-
-const ActivityOverviewCard = () => {
+const ActivityOverviewCard = ({dashboardData}) => {
+  const data = [
+    { name: 'Questions Solved', value: dashboardData?.totalQuestionsSolved || 0, color: '#8b5cf6' },
+    { name: 'Tests Taken', value: dashboardData?.testsTaken || 0, color: '#ec4899' },
+    {
+      name: "Total Score",
+      value: dashboardData?.totalScore || 0,
+      color: "#06b6d4", // cyan
+    },
+  ];
+  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}

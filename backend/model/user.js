@@ -25,7 +25,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["user", "admin"],
         default: "user"
-    }
+    },
+    testHistory: [
+        {
+            testId: { type: mongoose.Schema.Types.ObjectId, ref: 'Test' },
+            score: Number,
+            correct: Number,
+            wrong: Number,
+            total: Number,
+            maxMarks: Number,
+            submittedAt: { type: Date, default: Date.now }
+        }
+    ]
 }, { timestamps: true })
 
 userSchema.static("matchPassword", async function (email, password){
@@ -61,19 +72,19 @@ userSchema.static("matchPassword", async function (email, password){
 })
 
 userSchema.pre("save", function (next) {
-    const user = this;
+  const user = this;
 
-    if (!user.isModified("password")) return;
+  if (!user.isModified("password")) return next(); // ✅ ensures save proceeds
 
-    const salt = randomBytes(16).toString('hex');
+  const salt = randomBytes(16).toString('hex');
+  const hashedPassword = createHmac('sha256', salt).update(user.password).digest('hex');
 
-    const hashedPassword = createHmac('sha256', salt).update(user.password).digest('hex');
+  user.salt = salt;
+  user.password = hashedPassword;
 
-    user.salt = salt;
-    user.password = hashedPassword;
+  next(); // ✅ completes the middleware
+});
 
-    next();
-})
 
 const USER = mongoose.model("User", userSchema);
 

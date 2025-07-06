@@ -31,4 +31,10 @@ const logIn = async (userData) => {
   }
 };
 
-export default { signUp, logIn };
+
+const getDashboardStats = async (userId) => {
+  const response = await API.get(`/dashboard-stats?userId=${userId}`);
+  return response.data;
+};
+
+export default { signUp, logIn, getDashboardStats };

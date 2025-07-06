@@ -59,7 +59,63 @@ const userLogin = async (req, res) => {
     })
 }
 
+const getUserDashboardStats = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    const user = await USER.findById(userId).lean();
+
+    if (!user || !user.testHistory) {
+      return res.json({ success: true, data: null });
+    }
+
+    const testsTaken = user.testHistory.length;
+    const totalScore = user.testHistory.reduce((sum, test) => sum + test.score, 0);
+    const totalCorrect = user.testHistory.reduce((sum, test) => sum + test.correct, 0);
+    const totalWrong = user.testHistory.reduce((sum, test) => sum + test.wrong, 0);
+    const maxMarks = user.testHistory.reduce((sum, test) => sum + test.maxMarks, 0);
+
+    const averageScore = testsTaken > 0 ? totalScore / testsTaken : 0;
+    const accuracy = totalCorrect + totalWrong > 0
+      ? (totalCorrect / (totalCorrect + totalWrong)) * 100
+      : 0;
+
+    const last7Days = [...Array(7)].map((_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+
+      const tests = user.testHistory.filter(test => 
+        new Date(test.submittedAt).toISOString().startsWith(dateStr)
+      );
+      const total = tests.reduce((sum, t) => sum + t.score, 0);
+
+      return {
+        date: dateStr,
+        score: total
+      };
+    }).reverse();
+
+    res.json({
+      success: true,
+      data: {
+        testsTaken,
+        totalScore,
+        averageScore: averageScore.toFixed(2),
+        accuracy: accuracy.toFixed(2),
+        maxMarks,
+        totalQuestionsSolved: totalCorrect,
+        weeklyPerformance: last7Days
+      }
+    });
+  } catch (err) {
+    console.error('Dashboard stats error:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+
 module.exports = {
     userSignUp,
-    userLogin
+    userLogin,
+    getUserDashboardStats
 }

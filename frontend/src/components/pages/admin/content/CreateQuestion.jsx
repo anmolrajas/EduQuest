@@ -34,8 +34,7 @@ const CreateQuestion = () => {
             try {
                 const subjectRes = await subjectService.listSubjects();
                 if (subjectRes.success) setSubjects(subjectRes.data);
-                const topicRes = await topicService.listTopics();
-                if (topicRes.success) setTopics(topicRes.data);
+                fetchTopics();
             } catch (err) {
                 toast.error('Failed to load subjects or topics');
             }
@@ -43,8 +42,20 @@ const CreateQuestion = () => {
         fetchData();
     }, []);
 
+    const fetchTopics = async (subjectId = '') => {
+        try {
+          const res = await topicService.getTopicNames(subjectId);
+          setTopics(res.data || []);
+        } catch {
+          toast.error('Failed to fetch topics');
+        }
+      };
+
     const handleChange = (field) => (e) => {
         setFormData({ ...formData, [field]: e.target.value });
+        if(field === 'subjectId') {
+            fetchTopics(e.target.value);
+        }
     };
 
     const handleOptionChange = (index) => (e) => {

@@ -1,18 +1,39 @@
 import { motion } from "framer-motion";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { TrendingUp } from "@mui/icons-material";
 
-const data = [
-  { name: 'Mon', score: 85 },
-  { name: 'Tue', score: 78 },
-  { name: 'Wed', score: 92 },
-  { name: 'Thu', score: 88 },
-  { name: 'Fri', score: 95 },
-  { name: 'Sat', score: 89 },
-  { name: 'Sun', score: 93 },
-];
+// Utility to convert date to day abbreviation (e.g., "Mon", "Tue")
+const getDayAbbreviation = (dateStr) => {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-US", { weekday: "short" }); // Mon, Tue, ...
+};
 
-const PerformanceCard = () => {
+const PerformanceCard = ({ dashboardData }) => {
+  const data =
+    dashboardData?.weeklyPerformance?.map((entry) => ({
+      name: getDayAbbreviation(entry.date),
+      score: entry.score,
+    })) || [];
+
+  const currentWeek = dashboardData?.weeklyPerformance || [];
+  const firstHalf = currentWeek.slice(0, 3);  // Mon-Tue-Wed
+  const secondHalf = currentWeek.slice(4, 7); // Fri-Sat-Sun
+
+  const firstHalfScore = firstHalf.reduce((sum, item) => sum + item.score, 0);
+  const secondHalfScore = secondHalf.reduce((sum, item) => sum + item.score, 0);
+
+  const growthPercentage = firstHalfScore === 0
+    ? secondHalfScore > 0 ? 100 : 0
+    : ((secondHalfScore - firstHalfScore) / firstHalfScore) * 100;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -33,9 +54,11 @@ const PerformanceCard = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: "spring" }}
-          className="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-medium"
+          className={`px-3 py-1 rounded-full text-sm font-medium
+          ${growthPercentage >= 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}
         >
-          +12% ↗
+          {growthPercentage >= 0 ? '+' : ''}
+          {growthPercentage.toFixed(1)}% {growthPercentage >= 0 ? '↗' : '↘'}
         </motion.div>
       </div>
 
@@ -43,32 +66,32 @@ const PerformanceCard = () => {
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis 
-              dataKey="name" 
+            <XAxis
+              dataKey="name"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: '#666' }}
+              tick={{ fontSize: 12, fill: "#666" }}
             />
-            <YAxis 
+            <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: '#666' }}
+              tick={{ fontSize: 12, fill: "#666" }}
             />
-            <Tooltip 
+            <Tooltip
               contentStyle={{
-                backgroundColor: '#fff',
-                border: 'none',
-                borderRadius: '12px',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                backgroundColor: "#fff",
+                border: "none",
+                borderRadius: "12px",
+                boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
               }}
             />
-            <Line 
-              type="monotone" 
-              dataKey="score" 
-              stroke="url(#gradient)" 
+            <Line
+              type="monotone"
+              dataKey="score"
+              stroke="url(#gradient)"
               strokeWidth={3}
-              dot={{ fill: '#8b5cf6', strokeWidth: 2, r: 6 }}
-              activeDot={{ r: 8, fill: '#8b5cf6' }}
+              dot={{ fill: "#8b5cf6", strokeWidth: 2, r: 6 }}
+              activeDot={{ r: 8, fill: "#8b5cf6" }}
             />
             <defs>
               <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="0">

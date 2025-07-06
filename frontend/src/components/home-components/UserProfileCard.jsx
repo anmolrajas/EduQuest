@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Avatar, IconButton } from "@mui/material";
 import { Settings, Star } from "@mui/icons-material";
 
-const UserProfileCard = ({user}) => {
+const UserProfileCard = ({user, dashboardData}) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -63,7 +63,7 @@ const UserProfileCard = ({user}) => {
                 transition={{ delay: 0.7, type: "spring" }}
                 className="text-2xl font-bold text-purple-600"
               >
-                245
+                {dashboardData?.testsTaken || 0}
               </motion.div>
               <p className="text-xs text-gray-500">Tests Completed</p>
             </div>
@@ -74,7 +74,7 @@ const UserProfileCard = ({user}) => {
                 transition={{ delay: 0.8, type: "spring" }}
                 className="text-2xl font-bold text-orange-500"
               >
-                87%
+                {dashboardData?.averageScore || 0}
               </motion.div>
               <p className="text-xs text-gray-500">Average Score</p>
             </div>

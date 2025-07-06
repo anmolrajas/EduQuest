@@ -34,6 +34,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ManageHistoryIcon from '@mui/icons-material/ManageHistory';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
+import { School } from '@mui/icons-material';
 
 import { AuthContext } from '../../contextData/AuthContextData';
 
@@ -65,7 +66,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
       label: 'Tests',
       icon: <AssignmentTurnedInIcon sx={{ color: '#fb923c' }} />,
       children: [
-        { label: 'Quiz', to: '/tests/quiz', icon: <AssignmentTurnedInIcon sx={{ fontSize: 20, color: '#f87171' }} /> },
+        { label: 'Test', to: '/tests/test-dashboard', icon: <School sx={{ fontSize: 20, color: '#f87171' }} /> },
         { label: 'Leaderboard', to: '/tests/leaderboard', icon: <EmojiEventsIcon sx={{ fontSize: 20, color: '#60a5fa' }} /> },
       ],
     },
@@ -101,7 +102,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
         <ListItemButton onClick={() => setOpenProfileMenu(!openProfileMenu)}>
           <ListItemIcon>
             <Avatar
-              src="https://cdn.pixabay.com/photo/2015/03/04/22/35/avatar-659652_640.png"
+              src="https://cdn.vectorstock.com/i/1000v/51/87/student-avatar-user-profile-icon-vector-47025187.jpg"
               sx={{ width: 32, height: 32 }}
             />
           </ListItemIcon>

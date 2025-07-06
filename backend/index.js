@@ -7,7 +7,8 @@ const userRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
 const subjectRoutes = require('./routes/subjectRoutes')
 const topicRoutes = require('./routes/topicRoutes')
-const questionRoutes = require('./routes/questionRoutes')
+const questionRoutes = require('./routes/questionRoutes');
+const testRoutes = require('./routes/testRoutes');
 const app = express();
 const PORT = 8000;
 require('dotenv').config();
@@ -32,6 +33,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/subjects', subjectRoutes);
 app.use('/api/topics', topicRoutes);
 app.use('/api/questions', questionRoutes);
+app.use('/api/tests', testRoutes);
 
 app.get('/', (req, res) => {
     return res.end('Hello from server');

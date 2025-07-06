@@ -33,11 +33,11 @@ const Content = () => {
       route: '/admin/content/questions',
     },
     {
-      title: 'Quiz Management',
-      description: 'Create and schedule quizzes smoothly.',
+      title: 'Test Management',
+      description: 'Create and manage tests smoothly.',
       icon: <Quiz fontSize="large" />,
       color: 'bg-rose-600',
-      route: '/admin/content/quizzes',
+      route: '/admin/content/tests',
     },
   ];
 

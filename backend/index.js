@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectMongoDB = require('./connection')
-// const blogRoutes = require('./routes/blogRoutes')
 const userRoutes = require('./routes/userRoutes')
 const authRoutes = require('./routes/authRoutes')
 const subjectRoutes = require('./routes/subjectRoutes')
@@ -10,7 +9,6 @@ const topicRoutes = require('./routes/topicRoutes')
 const questionRoutes = require('./routes/questionRoutes');
 const testRoutes = require('./routes/testRoutes');
 const app = express();
-const PORT = 8000;
 require('dotenv').config();
 
 connectMongoDB(process.env.MONGODB_URI).then(() => {
@@ -39,6 +37,6 @@ app.get('/', (req, res) => {
     return res.end('Hello from server');
 })
 
-app.listen(PORT, () => {
-    console.log(`Server Started at PORT: ${PORT}`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server Started at PORT: ${process.env.PORT}`);
 })

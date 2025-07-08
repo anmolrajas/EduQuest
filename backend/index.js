@@ -10,6 +10,7 @@ const questionRoutes = require('./routes/questionRoutes');
 const testRoutes = require('./routes/testRoutes');
 const app = express();
 require('dotenv').config();
+const allowedOrigins = ['http://localhost:5173'];
 
 connectMongoDB(process.env.MONGODB_URI).then(() => {
     console.log("MongoDB Connected Successfully");
@@ -18,8 +19,25 @@ connectMongoDB(process.env.MONGODB_URI).then(() => {
 })
 
 app.use(cors({
-    origin: "http://localhost:5173", // Local frontend URL
-    credentials: true // Allows cookies to be sent/received
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
+
+app.options('*', cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
 }));
 
 app.use(express.json());

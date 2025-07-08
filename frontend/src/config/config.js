@@ -1,3 +1,3 @@
-const BackendServer = 'http://localhost:8000';
+const BackendServer = 'https://eduquest-dbrg.onrender.com';
 
 export default BackendServer;

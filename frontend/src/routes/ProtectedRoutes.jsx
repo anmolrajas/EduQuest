@@ -1,26 +1,26 @@
 // components/auth/ProtectedRoute.js
-import React, { useContext } from 'react'
-import { Navigate, Outlet } from 'react-router-dom'
-import Cookies from 'js-cookie'
+import React, { useContext } from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../contextData/AuthContextData';
 
 const ProtectedRoutes = () => {
-  const authToken = Cookies.get("authToken");
-  console.log("authToken in protected routes", authToken);
-  const { loading, user } = useContext(AuthContext);
-
-  console.log("From authcontext", loading, user);
+  const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <div className="text-center mt-10 text-yellow-500">Checking session...</div>;
+    return (
+      <div className="text-center mt-10 text-yellow-500">
+        Checking session…
+      </div>
+    );
   }
 
-  if (!authToken) {
-    console.log("Authenticated...", authToken);
-    return <Navigate to="/login" replace />
+  // Not authenticated – send to login
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
-  return <Outlet />
-}
+  // Authenticated – render child routes
+  return <Outlet />;
+};
 
-export default ProtectedRoutes
+export default ProtectedRoutes;

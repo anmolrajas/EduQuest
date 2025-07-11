@@ -10,7 +10,7 @@ const questionRoutes = require('./routes/questionRoutes');
 const testRoutes = require('./routes/testRoutes');
 const app = express();
 require('dotenv').config();
-const allowedOrigins = ['http://localhost:5173', 'https://edu-quest-git-production-anmolrajas-projects.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://upgradist.vercel.app/'];
 
 connectMongoDB(process.env.MONGODB_URI).then(() => {
     console.log("MongoDB Connected Successfully");

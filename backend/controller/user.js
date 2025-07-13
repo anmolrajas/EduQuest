@@ -45,8 +45,9 @@ const userLogin = async (req, res) => {
     console.log("This is auth token:- ",authToken);
     res.cookie("authToken", authToken, {
       httpOnly: true,
-      secure: isProd, // only true in production (HTTPS)
-      sameSite: isProd ? "strict" : "lax",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax", // Use 'none' for cross-site cookie
+      domain: isProd ? ".vercel.app" : undefined,
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
     

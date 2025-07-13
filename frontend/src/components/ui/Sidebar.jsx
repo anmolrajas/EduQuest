@@ -89,11 +89,11 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
     <Box sx={{ height: '100%', backgroundColor: '#1f2937', color: 'white' }}>
       <Toolbar>
         <Typography
-          variant="h6"
+          variant="h5"
           noWrap
-          sx={{ fontWeight: 'bold', color: '#facc15', width: '100%', textAlign: 'center' }}
+          sx={{ fontWeight: 800, color: '#facc15', width: '100%', textAlign: 'left' }}
         >
-          EduTech
+          Upgradist
         </Typography>
       </Toolbar>
       <Divider sx={{ borderColor: '#374151' }} />

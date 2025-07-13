@@ -242,51 +242,34 @@ const ComprehensiveLeaderboard = () => {
                       </div>
                       {expandedUser === idx && (
                         <div className="mt-6 pt-6 border-t border-gray-200 animate-in slide-in-from-top-2 duration-300">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                              <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                                <Calendar className="w-4 h-4 mr-2" />
-                                Recent Tests
-                              </h4>
-                              <div className="space-y-2">
-                                {user.recentTests.map((test, testIdx) => (
-                                  <div key={testIdx} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                                    <div>
-                                      <p className="font-medium text-sm">{test.name}</p>
-                                      <p className="text-xs text-gray-500">{test.date}</p>
-                                    </div>
-                                    <div className="text-right">
-                                      <p className="font-bold text-blue-600">{test.score}</p>
-                                    </div>
+                          <div className="w-full">
+                            <h4 className="font-semibold text-gray-800 mb-4 flex items-center">
+                              <Target className="w-4 h-4 mr-2" />
+                              Performance Stats
+                            </h4>
+                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                              <div className="bg-purple-50 p-4 rounded-lg text-center shadow-sm">
+                                <p className="text-2xl font-bold text-purple-600">{user.totalScore}</p>
+                                <p className="text-sm text-gray-600 mt-1">Total Score</p>
+                              </div>
+                              <div className="bg-blue-50 p-4 rounded-lg text-center shadow-sm">
+                                <p className="text-2xl font-bold text-blue-600">{user.accuracy}%</p>
+                                <p className="text-sm text-gray-600 mt-1">Accuracy</p>
+                              </div>
+                              {selectedTest === 'overall' && (
+                                <>
+                                  <div className="bg-green-50 p-4 rounded-lg text-center shadow-sm">
+                                    <p className="text-2xl font-bold text-green-600">{user.totalTests}</p>
+                                    <p className="text-sm text-gray-600 mt-1">Tests</p>
                                   </div>
-                                ))}
-                              </div>
-                            </div>
-                            <div>
-                              <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
-                                <Target className="w-4 h-4 mr-2" />
-                                Performance Stats
-                              </h4>
-                              <div className="grid grid-cols-2 gap-3">
-                                <div className="bg-purple-50 p-3 rounded-lg text-center">
-                                  <p className="text-2xl font-bold text-purple-600">{user.totalScore}</p>
-                                  <p className="text-xs text-gray-600">Total Score</p>
-                                </div>
-                                <div className="bg-blue-50 p-3 rounded-lg text-center">
-                                  <p className="text-2xl font-bold text-blue-600">{user.accuracy}%</p>
-                                  <p className="text-xs text-gray-600">Accuracy</p>
-                                </div>
-                                <div className="bg-green-50 p-3 rounded-lg text-center">
-                                  <p className="text-2xl font-bold text-green-600">{user.testsTaken}</p>
-                                  <p className="text-xs text-gray-600">Tests</p>
-                                </div>
-                                <div className="bg-yellow-50 p-3 rounded-lg text-center">
-                                  <p className="text-2xl font-bold text-yellow-600">
-                                    {Math.round(user.totalScore / user.testsTaken)}
-                                  </p>
-                                  <p className="text-xs text-gray-600">Avg Score</p>
-                                </div>
-                              </div>
+                                  <div className="bg-yellow-50 p-4 rounded-lg text-center shadow-sm">
+                                    <p className="text-2xl font-bold text-yellow-600">
+                                      {user.averageScore}
+                                    </p>
+                                    <p className="text-sm text-gray-600 mt-1">Avg Score</p>
+                                  </div>
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>

@@ -27,7 +27,7 @@ const Header = ({ onMenuClick }) => {
             cursor: 'pointer',
           }}
         >
-          EduTech
+          Upgradist
         </Typography>
       </Toolbar>
     </AppBar>

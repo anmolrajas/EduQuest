@@ -183,13 +183,13 @@ const LoginSignup = () => {
                     variants={itemVariants}
                     className="text-4xl md:text-5xl font-bold mb-6 text-[#F59E0B]"
                 >
-                    🚀 Welcome to EduQuest!
+                    🚀 Welcome to Upgradist!
                 </motion.h1>
                 <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
                     📚 <strong>Learn Smart:</strong> Access high-quality courses & assessments.
                 </motion.p>
                 <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
-                    🎯 <strong>Test Your Knowledge:</strong> Take interactive quizzes & track your progress.
+                    🎯 <strong>Test Your Knowledge:</strong> Take interactive tests & track your progress.
                 </motion.p>
                 <motion.p variants={itemVariants} className="text-lg md:text-xl mt-3">
                     📊 <strong>AI Analytics:</strong> Get insights into your strengths & improvement areas.

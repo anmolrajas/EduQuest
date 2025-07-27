@@ -47,7 +47,6 @@ const userLogin = async (req, res) => {
       httpOnly: true,
       secure: isProd,
       sameSite: isProd ? "none" : "lax", // Use 'none' for cross-site cookie
-      domain: isProd ? ".vercel.app" : undefined,
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
     

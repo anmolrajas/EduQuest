@@ -49,7 +49,7 @@ const UserProfileCard = ({user, dashboardData}) => {
                       <div className="flex items-center gap-2">
                           <Star className="text-yellow-500 text-sm" />
                           <span className="text-sm font-medium text-purple-600 bg-purple-100 px-3 py-1 rounded-full">
-                              {user.role === "user" ? 'Student' : ''}
+                              {user.role === "user" ? 'Student' : 'Administrator'}
                           </span>
                       </div>
                   </div>

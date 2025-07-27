@@ -75,7 +75,7 @@ const Sidebar = ({ mobileOpen, handleDrawerToggle }) => {
       icon: <AdminPanelSettingsIcon sx={{ color: '#facc15' }} />,
       children: [
         { label: 'Content Management', to: '/admin/content', icon: <MenuBookIcon sx={{ fontSize: 20, color: '#fcd34d' }} /> },
-        { label: 'User Management', to: '/admin/users', icon: <SupervisedUserCircleIcon sx={{ fontSize: 20, color: '#60a5fa' }} /> },
+        { label: 'User Management', to: '/admin/user-management', icon: <SupervisedUserCircleIcon sx={{ fontSize: 20, color: '#60a5fa' }} /> },
         { label: 'Reports', to: '/admin/reports', icon: <InsertChartIcon sx={{ fontSize: 20, color: '#4ade80' }} /> },
         { label: 'View Contributions', to: '/admin/contributions', icon: <VolunteerActivismIcon sx={{ fontSize: 20, color: '#fb7185' }} /> },
       ],

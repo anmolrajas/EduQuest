@@ -25,6 +25,8 @@ import TestQuizDashboard from './components/exam-test-components/TestQuizDashboa
 import TestScreen from './components/exam-test-components/TestScreen.jsx'
 import TestLeaderboard from './components/exam-test-components/TestLeaderboard.jsx'
 import ComprehensiveLeaderboard from './components/exam-test-components/ComprehensiveLeaderboard.jsx'
+import UsersListing from './components/pages/admin/user-management/UsersListing.jsx'
+import AcceptInvite from './components/pages/AcceptInvite.jsx'
 
 const router = createBrowserRouter([
   {
@@ -127,6 +129,10 @@ const router = createBrowserRouter([
           {
             path: '/admin/content/tests/edit-test/:testId',
             element: <EditTestForm />
+          },
+          {
+            path: '/admin/user-management',
+            element: <UsersListing />
           }
         ]
       }
@@ -135,7 +141,11 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginSignup />
-  }
+  },
+  {
+    path: '/accept-invite',
+    element: <AcceptInvite />
+  },
 ])
 
 const App = () => {

@@ -116,8 +116,52 @@ const getUserDashboardStats = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "", role } = req.query;
+
+    const query = {};
+
+    // 🔍 Search by name or email
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    // 🎯 Filter by role
+    if (role) {
+      query.role = role;
+    }
+
+    const totalUsers = await USER.countDocuments(query);
+
+    const users = await USER.find(query)
+      .select('-password -salt -testHistory') // Exclude sensitive fields
+      .skip((page - 1) * limit)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
+
+    return res.json({
+      status: true,
+      data: users,
+      pagination: {
+        total: totalUsers,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(totalUsers / limit),
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    return res.status(500).json({ status: false, msg: "Internal server error" });
+  }
+};
+
 module.exports = {
     userSignUp,
     userLogin,
-    getUserDashboardStats
+    getUserDashboardStats,
+    getAllUsers
 }

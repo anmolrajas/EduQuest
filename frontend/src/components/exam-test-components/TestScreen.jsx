@@ -397,10 +397,11 @@ const TestScreen = () => {
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900 mr-6">{testData?.title}</h1>
-              <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            {/* Left side: Test title and question info */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6">
+              <h1 className="text-2xl font-bold text-gray-900">{testData?.title}</h1>
+              <div className="flex items-center space-x-4 mt-2 sm:mt-0">
                 <span className="text-sm text-gray-600">
                   Question {currentQuestion + 1} of {testData?.questions.length}
                 </span>
@@ -409,7 +410,9 @@ const TestScreen = () => {
                 </span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+
+            {/* Right side: Timer + Submit */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
               <div className="flex items-center text-lg font-semibold">
                 <Clock className="w-5 h-5 text-red-500 mr-2" />
                 <span className={timeLeft <= 60 ? 'text-red-500' : 'text-gray-700'}>
@@ -418,7 +421,7 @@ const TestScreen = () => {
               </div>
               <button
                 onClick={handleSubmitTest}
-                className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
+                className="mt-2 sm:mt-0 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium"
               >
                 Submit Test
               </button>
@@ -471,30 +474,26 @@ const TestScreen = () => {
                   )}
                 </div>
 
-                <AnimatePresence>
-                  {showHint && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Lightbulb className="w-5 h-5 text-amber-500 mr-2" />
-                          <span className="font-medium text-amber-800">Hint</span>
-                        </div>
-                        <button
-                          onClick={() => setShowHint(false)}
-                          className="text-amber-500 hover:text-amber-700"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                <div
+                  className={`transition-all duration-300 overflow-hidden mb-6 ${showHint ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+                    }`}
+                >
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Lightbulb className="w-5 h-5 text-amber-500 mr-2" />
+                        <span className="font-medium text-amber-800">Hint</span>
                       </div>
-                      <p className="text-amber-700 mt-2">{currentQ.hint}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      <button
+                        onClick={() => setShowHint(false)}
+                        className="text-amber-500 hover:text-amber-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <p className="text-amber-700 mt-2">{currentQ.hint}</p>
+                  </div>
+                </div>
 
                 <div className="space-y-3">
                   {currentQ.options.map((option, index) => (

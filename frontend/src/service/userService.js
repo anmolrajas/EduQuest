@@ -37,4 +37,22 @@ const getDashboardStats = async (userId) => {
   return response.data;
 };
 
-export default { signUp, logIn, getDashboardStats };
+const getAllUsers = async ({ page = 1, limit = 10, search = "", role = "" } = {}) => {
+  try {
+    const queryParams = new URLSearchParams();
+
+    queryParams.append("page", page);
+    queryParams.append("limit", limit);
+    if (search) queryParams.append("search", search);
+    if (role) queryParams.append("role", role);
+
+    const response = await API.get(`/users-list?${queryParams.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+export default { signUp, logIn, getDashboardStats, getAllUsers };

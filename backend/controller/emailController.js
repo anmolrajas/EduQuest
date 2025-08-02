@@ -9,7 +9,16 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-const portfolioContactEmailBody = (senderName, senderEmail, subject, message) => {
+const portfolioContactEmailBody = (senderName, senderEmail, subject, message, receivedDate) => {
+    const formattedDate = new Date(receivedDate).toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Kolkata'
+  });
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -111,13 +120,6 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
             gap: 8px;
         }
         
-        .section-icon {
-            width: 6px;
-            height: 6px;
-            background: #3b82f6;
-            border-radius: 50%;
-        }
-        
         .contact-info-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -216,11 +218,11 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
         }
         
         .action-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            text-align: center;
+        }
+        
+        .action-buttons .btn {
+            display: inline-block;
         }
         
         .btn {
@@ -336,7 +338,6 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
         <div class="content">
             <div class="section">
                 <div class="section-title">
-                    <div class="section-icon"></div>
                     Contact Information
                 </div>
                 <div class="contact-info-card">
@@ -361,7 +362,6 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
             
             <div class="section">
                 <div class="section-title">
-                    <div class="section-icon"></div>
                     Message Details
                 </div>
                 <div class="message-card">
@@ -371,21 +371,13 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
             
             <div class="timestamp-bar">
                 <div class="timestamp-text">
-                    Received on ${new Date().toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}
+                    Received on ${formattedDate}
                 </div>
             </div>
             
             <div class="action-section">
                 <p style="color: #64748b; margin-bottom: 8px; font-weight: 500;">Ready to respond?</p>
                 <div class="action-buttons">
-                    <a href="mailto:${senderEmail}" class="btn btn-primary">Reply</a>
                     <a href="mailto:${senderEmail}?subject=Re: ${encodeURIComponent(subject)}" class="btn btn-secondary">Quick Reply</a>
                 </div>
             </div>
@@ -419,50 +411,52 @@ const portfolioContactEmailBody = (senderName, senderEmail, subject, message) =>
 // ============================
 exports.contactMePortfolioEmail = async (req, res) => {
   try {
-    const { senderName, senderEmail, subject, message } = req.body;
+    const { senderName, senderEmail, subject, message, receivedDate } = req.body;
 
-    // Validation
+    // Validation (existing)
     if (!senderName || !senderEmail || !subject || !message) {
       return res.status(400).json({ 
         error: 'All fields are required: senderName, senderEmail, subject, message' 
       });
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(senderEmail)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
-    // Generate email HTML
-    const emailHtml = portfolioContactEmailBody(senderName, senderEmail, subject, message);
-    
-    console.log('Sending portfolio contact email...');
-    console.log('From:', senderName, '<' + senderEmail + '>');
-    console.log('Subject:', subject);
+    // Use receivedDate from frontend or current date
+    const dateToUse = receivedDate || new Date();
 
-    // Send email to yourself (portfolio owner)
+    // Generate email HTML
+    const emailHtml = portfolioContactEmailBody(
+      senderName,
+      senderEmail,
+      subject,
+      message,
+      dateToUse
+    );
+
+    // Send email (same as before)
     await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.SMTP_EMAIL}>`,
-      to: 'anmolrajas251@gmail.com', // Your email address
-      replyTo: senderEmail, // So you can reply directly to the sender
+      to: 'anmolrajas251@gmail.com',
+      replyTo: senderEmail,
       subject: `Portfolio Contact: ${subject}`,
       html: emailHtml,
       text: `
-            New Portfolio Contact Message
+        New Portfolio Contact Message
 
-            From: ${senderName} (${senderEmail})
-            Subject: ${subject}
+        From: ${senderName} (${senderEmail})
+        Subject: ${subject}
 
-            Message:
-            ${message}
+        Message:
+        ${message}
 
-            ---
-            Sent via Portfolio Contact Form on ${new Date().toLocaleString()}
-                `
+        ---
+        Sent via Portfolio Contact Form on ${new Date(dateToUse).toLocaleString()}
+      `
     });
-
-    console.log('Portfolio contact email sent successfully');
 
     return res.json({ 
       message: 'Contact message sent successfully',

@@ -9,9 +9,10 @@ const topicRoutes = require('./routes/topicRoutes')
 const questionRoutes = require('./routes/questionRoutes');
 const testRoutes = require('./routes/testRoutes');
 const inviteRoutes = require('./routes/inviteRoutes');
+const emailRoutes = require('./routes/emailRoutes');
 const app = express();
 require('dotenv').config();
-const allowedOrigins = ['http://localhost:5173', 'https://upgradist.vercel.app', 'https://eduquest-git-production-anmolrajas-projects.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://upgradist.vercel.app', 'https://eduquest-git-production-anmolrajas-projects.vercel.app', 'https://anmolrajas.vercel.app'];
 
 connectMongoDB(process.env.MONGODB_URI).then(() => {
     console.log("MongoDB Connected Successfully");
@@ -46,6 +47,7 @@ app.use('/api/topics', topicRoutes);
 app.use('/api/questions', questionRoutes);
 app.use('/api/tests', testRoutes);
 app.use('/api/invites', inviteRoutes);
+app.use('/api/emails', emailRoutes);
 
 app.get('/', (req, res) => {
     return res.end('Hello from server');
